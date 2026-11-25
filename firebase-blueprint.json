@@ -1,0 +1,256 @@
+{
+  "entities": {
+    "UserPrivate": {
+      "title": "UserPrivate",
+      "description": "Private owner-only user account document storing PII (email), preferences, and immutable role.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "email": { "type": "string", "format": "email", "minLength": 3, "maxLength": 160 },
+        "displayName": { "type": "string", "minLength": 1, "maxLength": 60 },
+        "handle": { "type": "string", "minLength": 2, "maxLength": 32, "pattern": "^[a-z0-9_]+$" },
+        "bio": { "type": "string", "maxLength": 240 },
+        "avatarUrl": { "type": "string", "maxLength": 512 },
+        "location": { "type": "string", "maxLength": 80 },
+        "website": { "type": "string", "maxLength": 512 },
+        "language": { "type": "string", "minLength": 2, "maxLength": 16 },
+        "interests": { "type": "array", "description": "Bounded list of up to 10 selected interest topics." },
+        "isPrivateAccount": { "type": "boolean" },
+        "lowDataMode": { "type": "boolean" },
+        "onboardingCompleted": { "type": "boolean" },
+        "role": { "type": "string", "enum": ["member"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "uid",
+        "email",
+        "displayName",
+        "handle",
+        "bio",
+        "avatarUrl",
+        "location",
+        "website",
+        "language",
+        "interests",
+        "isPrivateAccount",
+        "lowDataMode",
+        "onboardingCompleted",
+        "role",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "PublicProfile": {
+      "title": "PublicProfile",
+      "description": "Publicly discoverable creator card strictly isolated from private PII fields.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "displayName": { "type": "string", "minLength": 1, "maxLength": 60 },
+        "handle": { "type": "string", "minLength": 2, "maxLength": 32, "pattern": "^[a-z0-9_]+$" },
+        "bio": { "type": "string", "maxLength": 240 },
+        "avatarUrl": { "type": "string", "maxLength": 512 },
+        "location": { "type": "string", "maxLength": 80 },
+        "website": { "type": "string", "maxLength": 512 },
+        "language": { "type": "string", "minLength": 2, "maxLength": 16 },
+        "interests": { "type": "array", "description": "Bounded list of up to 10 creator interest topics." },
+        "isPublic": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "uid",
+        "displayName",
+        "handle",
+        "bio",
+        "avatarUrl",
+        "location",
+        "website",
+        "language",
+        "interests",
+        "isPublic",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "HandleReservation": {
+      "title": "HandleReservation",
+      "description": "Unique lowercase username reservation document keyed by handle.",
+      "type": "object",
+      "properties": {
+        "handle": { "type": "string", "minLength": 2, "maxLength": 32, "pattern": "^[a-z0-9_]+$" },
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["handle", "uid", "createdAt"]
+    },
+    "Post": {
+      "title": "Post",
+      "description": "Public social feed post with hashtags, optional compressed image URL, and atomic engagement counters.",
+      "type": "object",
+      "properties": {
+        "authorId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "authorName": { "type": "string", "minLength": 1, "maxLength": 60 },
+        "authorHandle": { "type": "string", "minLength": 2, "maxLength": 32, "pattern": "^[a-z0-9_]+$" },
+        "authorAvatar": { "type": "string", "maxLength": 512 },
+        "content": { "type": "string", "minLength": 1, "maxLength": 1000 },
+        "topic": {
+          "type": "string",
+          "enum": ["Design", "Technology", "Photography", "Audio", "Cinema", "Ideas", "Community", "Lifestyle"]
+        },
+        "hashtags": { "type": "array", "description": "Bounded list of up to 10 normalized hashtags." },
+        "mediaType": { "type": "string", "enum": ["none", "image"] },
+        "imageUrl": { "type": "string", "maxLength": 512 },
+        "visibility": { "type": "string", "enum": ["public"] },
+        "likesCount": { "type": "number" },
+        "commentsCount": { "type": "number" },
+        "lastCommentId": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "authorId",
+        "authorName",
+        "authorHandle",
+        "authorAvatar",
+        "content",
+        "topic",
+        "hashtags",
+        "mediaType",
+        "imageUrl",
+        "visibility",
+        "likesCount",
+        "commentsCount",
+        "lastCommentId",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Comment": {
+      "title": "Comment",
+      "description": "User comment associated with a public post.",
+      "type": "object",
+      "properties": {
+        "postId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "authorId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "authorName": { "type": "string", "minLength": 1, "maxLength": 60 },
+        "authorHandle": { "type": "string", "minLength": 2, "maxLength": 32, "pattern": "^[a-z0-9_]+$" },
+        "authorAvatar": { "type": "string", "maxLength": 512 },
+        "text": { "type": "string", "minLength": 1, "maxLength": 400 },
+        "visibility": { "type": "string", "enum": ["public"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["postId", "authorId", "authorName", "authorHandle", "authorAvatar", "text", "visibility", "createdAt"]
+    },
+    "Like": {
+      "title": "Like",
+      "description": "Deterministic like record keyed by {postId}_{userId}.",
+      "type": "object",
+      "properties": {
+        "postId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["postId", "userId", "createdAt"]
+    },
+    "Follow": {
+      "title": "Follow",
+      "description": "Deterministic follow relationship keyed by {followerId}_{followingId}.",
+      "type": "object",
+      "properties": {
+        "followerId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "followingId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["followerId", "followingId", "createdAt"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "Private recipient notification triggered by likes, comments, or follows.",
+      "type": "object",
+      "properties": {
+        "recipientId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "actorId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "actorName": { "type": "string", "minLength": 1, "maxLength": 60 },
+        "actorHandle": { "type": "string", "minLength": 2, "maxLength": 32, "pattern": "^[a-z0-9_]+$" },
+        "type": { "type": "string", "enum": ["like", "comment", "follow"] },
+        "postId": { "type": "string", "maxLength": 128 },
+        "message": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "read": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["recipientId", "actorId", "actorName", "actorHandle", "type", "postId", "message", "read", "createdAt"]
+    },
+    "SavedPost": {
+      "title": "SavedPost",
+      "description": "Private bookmark record keyed by {userId}_{postId}, readable strictly by its owner.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "postId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "postId", "createdAt"]
+    },
+    "Story": {
+      "title": "Story",
+      "description": "Short ephemeral highlight card displayed in the Home Stories strip.",
+      "type": "object",
+      "properties": {
+        "authorId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "authorName": { "type": "string", "minLength": 1, "maxLength": 60 },
+        "authorHandle": { "type": "string", "minLength": 2, "maxLength": 32, "pattern": "^[a-z0-9_]+$" },
+        "authorAvatar": { "type": "string", "maxLength": 512 },
+        "caption": { "type": "string", "minLength": 1, "maxLength": 180 },
+        "imageUrl": { "type": "string", "maxLength": 512 },
+        "accentTheme": { "type": "string", "enum": ["aurora", "cobalt", "violet", "cyan"] },
+        "visibility": { "type": "string", "enum": ["public"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["authorId", "authorName", "authorHandle", "authorAvatar", "caption", "imageUrl", "accentTheme", "visibility", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserPrivate" },
+      "description": "Owner-only private user accounts containing PII (email), privacy/language preferences, and immutable role."
+    },
+    "/publicProfiles/{userId}": {
+      "schema": { "$ref": "#/entities/PublicProfile" },
+      "description": "Public creator profiles isolated from PII for discovery and feeds."
+    },
+    "/handles/{handle}": {
+      "schema": { "$ref": "#/entities/HandleReservation" },
+      "description": "Unique lowercase username registry preventing duplicate handles."
+    },
+    "/posts/{postId}": {
+      "schema": { "$ref": "#/entities/Post" },
+      "description": "Public social posts with hashtags, media metadata, and atomic like/comment counter sync."
+    },
+    "/comments/{commentId}": {
+      "schema": { "$ref": "#/entities/Comment" },
+      "description": "Public comments referencing existing posts."
+    },
+    "/likes/{likeId}": {
+      "schema": { "$ref": "#/entities/Like" },
+      "description": "User post likes keyed as {postId}_{userId}."
+    },
+    "/follows/{followId}": {
+      "schema": { "$ref": "#/entities/Follow" },
+      "description": "Follower relationships keyed as {followerId}_{followingId}."
+    },
+    "/notifications/{notificationId}": {
+      "schema": { "$ref": "#/entities/Notification" },
+      "description": "Private recipient activity notifications."
+    },
+    "/savedPosts/{savedId}": {
+      "schema": { "$ref": "#/entities/SavedPost" },
+      "description": "Private bookmarked posts keyed as {userId}_{postId}, visible only to owner."
+    },
+    "/stories/{storyId}": {
+      "schema": { "$ref": "#/entities/Story" },
+      "description": "Public creator stories displayed on the Home screen."
+    }
+  }
+}

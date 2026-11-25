@@ -1,0 +1,6 @@
+{
+  "name": "ONEHUB",
+  "description": "ONEHUB 2.0 — Connect. Create. Discover. A clean, mobile-first global social platform designed with Minimal Elegance.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
